@@ -1,0 +1,4 @@
+const texture = new THREE.TextureLoader().load( 'textures/land_ocean_ice_cloud_2048.jpg' );
+
+// immediately use the texture for material creation
+const material = new THREE.MeshBasicMaterial( { map: texture } );
