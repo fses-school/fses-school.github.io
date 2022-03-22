@@ -130,7 +130,7 @@ class LoadGltf {
   
   _LoadModel() {
     const loader = new GLTFLoader();
-    loader.load('./models/gltf/學校鞦韆/swing.gltf', (gltf) => {
+    loader.load('./models/gltf/學校鞦韆/學校鞦韆.gltf', (gltf) => {
       gltf.scene.scale.setScalar(100);
       gltf.scene.position.y=30;
       gltf.scene.traverse(c => {
