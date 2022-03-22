@@ -1,0 +1,17 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.7.33",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "extras" : {
+                "show_mmd_tabs" : 1,
+                "embed_textures" : 0,
+                "ui_lang" : 0
+            },
+            "name" : "Scene"
+        }
+    ]
+}
