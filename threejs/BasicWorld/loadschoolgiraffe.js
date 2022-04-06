@@ -116,7 +116,7 @@ class LoadGltf {
           normalMap: normal,
           }));
       
-    box.position.set(0, 30, 0);
+    box.position.set(0, 0, 0);
     box.castShadow = true;
     box.receiveShadow = true;
     this._scene.add(box);
@@ -143,7 +143,7 @@ class LoadGltf {
     const loader = new GLTFLoader();
     loader.load('./models/gltf/giraffe/scene.gltf', (gltf) => {
       gltf.scene.scale.setScalar(2);
-      gltf.scene.position.y=50;
+      gltf.scene.position.y=20;
       gltf.scene.traverse(c => {
         c.castShadow = true;
       });
