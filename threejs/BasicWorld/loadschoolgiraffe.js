@@ -92,7 +92,7 @@ class LoadGltf {
 
 
 
-    const plane = new THREE.Mesh(
+  /*  const plane = new THREE.Mesh(
         //new THREE.PlaneGeometry(100,100,10,10),
         new THREE.BoxGeometry( 100, 100, 1 ),
         new THREE.MeshPhysicalMaterial({
@@ -106,17 +106,20 @@ class LoadGltf {
     plane.rotation.x = -Math.PI / 2;
     plane.position.y = 30;
     plane.position.x = -1;
-    this._scene.add(plane);
+    this._scene.add(plane);*/
 
-  /*  const box = new THREE.Mesh(
-      new THREE.BoxGeometry(2, 2, 2),
-      new THREE.MeshStandardMaterial({
-          color: 0xFFFFFF,
-      }));
-    box.position.set(0, 1, 0);
+   const box = new THREE.Mesh(
+      new THREE.BoxGeometry(100, 1, 100),
+      new THREE.MeshPhysicalMaterial({
+          map: texture2,
+          roughnessMap: rough,
+          normalMap: normal,
+          }));
+      
+    box.position.set(0, 30, 0);
     box.castShadow = true;
     box.receiveShadow = true;
-    this._scene.add(box);*/
+    this._scene.add(box);
 
     
 
