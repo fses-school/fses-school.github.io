@@ -90,7 +90,23 @@ class LoadGltf {
 //髮線貼圖
     const normal = new THREE.TextureLoader().load('./models/gltf/giraffe/grass/Stylized_Grass_003_normal.jpg');
 
+    const tloader = new THREE.TextureLoader();
 
+
+
+    const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(10,10,10,10),
+        new THREE.MeshLambertMaterial({
+          map: tloader.load('./AR/giraffe.png')
+
+        }));
+    plane.castShadow = false;
+    plane.receiveShadow = true;
+    plane.rotation.y = Math.PI / 2;
+    plane.position.y = 30;
+    plane.position.x = -20;
+    plane.position.z = -10;
+    this._scene.add(plane);
 
   /*  const plane = new THREE.Mesh(
         //new THREE.PlaneGeometry(100,100,10,10),
