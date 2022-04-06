@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML5 Canvas</title>
+    <script src="./woodbox/three.min.js"></script>
+</head>
+<body>
+    <script>
+        //定義全域變數
+        var camera, scene, renderer, geometry, mesh;
+
+        init();
+        animate();
+
+        //該函數用於初始化工作
+        function init(){
+            //建立繪製器，這個繪製器就是 canvas 元素，並判斷是否支援 WebGLRenderingContext
+            if(window.WebGLRenderingContext){
+                renderer = new THREE.WebGLRenderer();
+            }else{
+                renderer = new THREE.CanvasRenderer();
+            }
+
+            //設定場景大小
+            renderer.setSize(640, 480);     
+
+            //建立透視投影相機
+            camera = new THREE.PerspectiveCamera(55, 640/480, 1, 10000);
+            
+            //相機初始位置為原點，將相機拉回來一些，這樣才能看到原點
+            camera.position.z = 1000;       
+
+            //建立場景
+            scene = new THREE.Scene();
+
+            //建立幾何模型
+            geometry = new THREE.Geometry()
+
+            /* 在模型中增加頂點資料，每個頂點就是一個 3D 向量
+               用 THREE.Vector3 表示下面我們增加 24 個座標，實際上組成一個立方體 */
+            //Front face
+            geometry.vertices.push(new THREE.Vector3(-200, -200,  200));
+            geometry.vertices.push(new THREE.Vector3( 200, -200,  200));
+            geometry.vertices.push(new THREE.Vector3( 200,  200,  200));
+            geometry.vertices.push(new THREE.Vector3(-200,  200,  200));
+
+            //Back face
+            geometry.vertices.push(new THREE.Vector3(-200, -200, -200));
+            geometry.vertices.push(new THREE.Vector3(-200,  200, -200));
+            geometry.vertices.push(new THREE.Vector3( 200,  200, -200));
+            geometry.vertices.push(new THREE.Vector3( 200, -200, -200));
+
+            //Top face
+            geometry.vertices.push(new THREE.Vector3(-200,  200, -200));
+            geometry.vertices.push(new THREE.Vector3(-200,  200,  200));
+            geometry.vertices.push(new THREE.Vector3( 200,  200,  200));
+            geometry.vertices.push(new THREE.Vector3( 200,  200, -200));
+
+            //Bottom face
+            geometry.vertices.push(new THREE.Vector3(-200, -200, -200));
+            geometry.vertices.push(new THREE.Vector3( 200, -200, -200));
+            geometry.vertices.push(new THREE.Vector3( 200, -200,  200));
+            geometry.vertices.push(new THREE.Vector3(-200, -200,  200));
+
+            //Right face
+            geometry.vertices.push(new THREE.Vector3( 200, -200, -200));
+            geometry.vertices.push(new THREE.Vector3( 200,  200, -200));
+            geometry.vertices.push(new THREE.Vector3( 200,  200,  200));
+            geometry.vertices.push(new THREE.Vector3( 200, -200,  200));
+
+            //Left face
+            geometry.vertices.push(new THREE.Vector3(-200, -200, -200));
+            geometry.vertices.push(new THREE.Vector3(-200, -200,  200));
+            geometry.vertices.push(new THREE.Vector3(-200,  200,  200));
+            geometry.vertices.push(new THREE.Vector3(-200,  200, -200));
+
+            /* 增加頂點索引，每 3 個頂點組成一個三角形，也就是一個面，每個面用一個 THREE.Face3 表示 */
+            //Front face
+            geometry.faces.push(new THREE.Face3(0, 1, 2));
+            geometry.faces.push(new THREE.Face3(0, 2, 3));
+
+            //Back face
+            geometry.faces.push(new THREE.Face3(4, 5, 6));
+            geometry.faces.push(new THREE.Face3(4, 6, 7));
+
+            //Top face
+            geometry.faces.push(new THREE.Face3(8, 9, 10));
+            geometry.faces.push(new THREE.Face3(8, 10, 11));
+
+            //Bottom face
+            geometry.faces.push(new THREE.Face3(12, 13, 14));
+            geometry.faces.push(new THREE.Face3(12, 14, 15));
+
+            //Right face
+            geometry.faces.push(new THREE.Face3(16, 17, 18));
+            geometry.faces.push(new THREE.Face3(16, 18, 19));
+
+            //Left face
+            geometry.faces.push(new THREE.Face3(20, 21, 22));
+            geometry.faces.push(new THREE.Face3(20, 22, 23));
+
+            /* 增加紋理座標，每個面有三個頂點，每個頂點的座標用一個 THREE.Vector2 表示
+               使用索引座標陣列，根據這個陣列建構紋理座標 */
+            var textureCoords = [
+                //Front face
+                0.0, 0.0,
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0,
+
+                //Back face
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0,
+                0.0, 0.0,
+
+                //Top face
+                0.0, 1.0,
+                0.0, 0.0,
+                1.0, 0.0,
+                1.0, 1.0,
+
+                //Bottom face
+                1.0, 1.0,
+                0.0, 1.0,
+                0.0, 0.0,
+                1.0, 0.0,
+
+                //Right face
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0,
+                0.0, 0.0,
+
+                //Left face
+                0.0, 0.0,
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0
+            ];
+
+            //檢查索引座標陣列，根據這個陣列增加紋理座標
+            for(var i = 0, l = geometry.faces.length; i < l; i++){
+                //面上一個頂點 a 的紋理座標
+                var uva = new THREE.Vector2(textureCoords[geometry.faces[i]['a']*2],
+                                            textureCoords[geometry.faces[i]['a']*2 + 1]);
+                
+                //面上一個頂點 b 的紋理座標
+                var uvb = new THREE.Vector2(textureCoords[geometry.faces[i]['b']*2],
+                                            textureCoords[geometry.faces[i]['b']*2 + 1]);
+                
+                //面上一個頂點 c 的紋理座標
+                var uvc = new THREE.Vector2(textureCoords[geometry.faces[i]['c']*2],
+                                            textureCoords[geometry.faces[i]['c']*2 + 1]);
+            
+                //將三個紋理座標增加到幾何模型
+                geometry.faceVertexUvs[0].push([uva, uvb, uvc]);
+            }
+
+            //載入紋理圖片
+            var textureLoader = new THREE.TextureLoader();
+            //跨網域載入
+	        //textureLoader.crossOrigin = 'anonymous';
+            var texture = textureLoader.load('texture/cover.jpg', function(tex){
+                //使用載入的紋理圖片建立一個材質
+                var material = new THREE.MeshBasicMaterial({map: tex});
+
+                //根據模型和材質建立曲面
+                mesh = new THREE.Mesh(geometry, material);
+
+                //將曲面增加到場景中
+                scene.add(mesh);
+            });
+
+            //將繪製器加到 DOM 結構中
+            document.body.appendChild(renderer.domElement); 
+        }
+
+
+        //該函數用於實現一個計時器動畫
+        function animate(){
+            //定時執行 animate() 函數
+            requestAnimationFrame(animate);
+
+            //曲面的 x、y 軸旋轉每次增加一定的弧度
+            if(mesh){
+                mesh.rotation.x += 0.01;
+                mesh.rotation.y += 0.02;
+            }
+
+            //使用指定的場景和相機繪製
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
