@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js GLB Loader Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.119.1/build/three.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@17.0.0/dist/tween.esm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@17.0.0/dist/tween.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.119.1/examples/js/loaders/GLTFLoader.js"></script>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+
+  <script>
+    // Three.js scene setup
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    // GLB Loader
+    var loader = new THREE.GLTFLoader();
+    loader.load( 'model.glb', function ( gltf ) {
+
+      scene.add( gltf.scene );
+
+    }, undefined, function ( error ) {
+
+      console.error( error );
+
+    } );
+
+    // Render loop
+    function animate() {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    }
+    animate();
+  </script>
+
+</body>
+</html>
